@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-85rvaDxiGr1VIXdTt7weNtLWcqtew",
+  "object": "chat.completion",
+  "created": 1696409630,
+  "model": "gpt-3.5-turbo-0613",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "As of my knowledge cutoff in 2021, the richest movie actor in the world is Shah Rukh Khan, with a net worth of approximately $600 million. He resides in Mumbai, India.\n\nThe richest movie actress in the world is currently Jami Gertz, with a net worth of approximately $3 billion. She resides in Los Angeles, California, United States.\n\nThe richest movie director in the world is George Lucas, with a net worth of approximately $10 billion. He resides in Marin County, California, United States."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 51,
+    "completion_tokens": 108,
+    "total_tokens": 159
+  }
+}
