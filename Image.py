@@ -4,7 +4,7 @@ from api_key import api_key
 openai.api_key = api_key
 
 img_data = openai.Image.create(
-    prompt = "luffy and zoro from one piece anime",
+    prompt = "A dragon flying in a sky at night",
     n = 1,
     size = "256x256"
 )
