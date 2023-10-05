@@ -5,10 +5,10 @@ import requests
 openai.api_key = api_key
 
 mountain_image = openai.Image.create_edit(
-    image=open("mountain.png", "rb"),
-    mask=open("boat.png", "rb"),
-    prompt = " Add a man swinging in the river",
-    n = 1,
+    image=open("images/ocean.png", "rb"),
+    mask=open("images/boat.png", "rb"),
+    prompt = " A big blue ocean and a big titanic ship",
+    n = 2,
     size = "1024x1024"
 )
 
@@ -20,7 +20,7 @@ response = requests.get(image_url)
 if response.status_code == 200:
 
 
-    with open("mountainboat."+"png",'wb') as f:
+    with open("images/oceanWithBoat."+"png",'wb') as f:
         f.write(response.content)
         print("image download successful")
 
