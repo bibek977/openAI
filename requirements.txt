@@ -1,2 +1,5 @@
 pip install openai
 # pip install -U openai-whisper
+pip install tenacity
+pip install termcolor
+

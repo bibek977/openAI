@@ -5,7 +5,7 @@ import requests
 openai.api_key = api_key
 
 img_data = openai.Image.create(
-    prompt = "A ocean beach",
+    prompt = "Movie",
     n = 1,
     size = "256x256"
 )
@@ -19,7 +19,7 @@ response = requests.get(img_url)
 if response.status_code == 200:
 
 
-    with open("images/seaImage."+"png",'wb') as f:
+    with open("images/moviews."+"png",'wb') as f:
         f.write(response.content)
         print("image download successful")
 
