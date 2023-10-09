@@ -1,106 +1,116 @@
+import json
 import openai
-from api_key import api_key
 import requests
-from tenacity import retry,wait_random_exponential,stop_after_attempt
+from tenacity import retry, wait_random_exponential, stop_after_attempt
 from termcolor import colored
+from api_key import api_key
 
-new_model = 'gpt-3.5-turbo'
+GPT_MODEL = "gpt-3.5-turbo-0613"
 
 openai.api_key = api_key
-
-@retry(wait=wait_random_exponential(min=1,max=40),stop=stop_after_attempt(3))
-def chat_request(messages,function=None,model=new_model):
+@retry(wait=wait_random_exponential(multiplier=1, max=40), stop=stop_after_attempt(3))
+def chat_completion_request(messages, functions=None, function_call=None, model=GPT_MODEL):
     headers = {
-        "Content-Type" : "application/json",
-        "Authorization" : f"Bearer {openai.api_key}"
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + openai.api_key,
     }
-    body = {
-        'model' : model,
-        'messages' : messages
-    }
-    if function is not None:
-        body.update(
-            {'function' : function}
-            )
-        
-        # get_function = function
-        # return get_function
-        
+    json_data = {"model": model, "messages": messages}
+    if functions is not None:
+        json_data.update({"functions": functions})
+    if function_call is not None:
+        json_data.update({"function_call": function_call})
     try:
-        # response = requests.post( url="https://api.openai.com/v1/chat/completions",
-        #     headers=headers,
-        #     json=body
-        # )
-        # return response
-    
-        response = openai.ChatCompletion.create(
-            model = model,
-            messages = body,
-            # function = get_function
+        response = requests.post(
+            "https://api.openai.com/v1/chat/completions",
+            headers=headers,
+            json=json_data,
         )
         return response
-
     except Exception as e:
-        print(e)
+        print("Unable to generate ChatCompletion response")
+        print(f"Exception: {e}")
         return e
+
+def pretty_print_conversation(messages):
+    role_to_color = {
+        "system": "red",
+        "user": "green",
+        "assistant": "blue",
+        "function": "magenta",
+    }
     
-class Chat:
+    for message in messages:
+        if message["role"] == "system":
+            print(colored(f"system: {message['content']}\n", role_to_color[message["role"]]))
+        elif message["role"] == "user":
+            print(colored(f"user: {message['content']}\n", role_to_color[message["role"]]))
+        elif message["role"] == "assistant" and message.get("function_call"):
+            print(colored(f"assistant: {message['function_call']}\n", role_to_color[message["role"]]))
+        elif message["role"] == "assistant" and not message.get("function_call"):
+            print(colored(f"assistant: {message['content']}\n", role_to_color[message["role"]]))
+        elif message["role"] == "function":
+            print(colored(f"function ({message['name']}): {message['content']}\n", role_to_color[message["role"]]))
 
-    def __init__(self):
-        self.chat_history = []
-
-    def add_chat(self,role,content):
-        message = {'role':role,"content":content}
-        self.chat_history.append(message)
-
-    def display_chat(self):
-        role_to_color = {
-            'system': 'red',
-            'user' : 'green',
-            'assistant':'blue',
-            'function' : 'magneta'
-        }
-
-        for message in self.chat_history:
-            print(
-                colored(
-                    f"{message['role']} : {message['content']} \n \n",
-                    role_to_color[message["role"]],
-                )
-            )
-
-function = [
+functions = [
     {
-        'name' : 'get_current_weather',
-        "description" : "Get the current weather in the given locaton",
-        "parameters" : {
-            "type" : "object",
-            "properties":{
-                "location" : {
-                    "type" : "string",
-                    "description" : "The city or district like Kathmandu, Pokhara, Hetuada",
+        "name": "get_current_weather",
+        "description": "Get the current weather",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The city and state, e.g. San Francisco, CA",
                 },
-                "format" : {
-                    "type" : "string",
-                    "enum" : ["celcius","farenheit"],
-                    "description" : "The temperature unit to use. Infer this from user location.",
-                }
-            }
-
+                "format": {
+                    "type": "string",
+                    "enum": ["celsius", "fahrenheit"],
+                    "description": "The temperature unit to use. Infer this from the users location.",
+                },
+            },
+            "required": ["location", "format"],
         },
-        "required" : ["location","format"],
+    },
+    {
+        "name": "get_n_day_weather_forecast",
+        "description": "Get an N-day weather forecast",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The city and state, e.g. San Francisco, CA",
+                },
+                "format": {
+                    "type": "string",
+                    "enum": ["celsius", "fahrenheit"],
+                    "description": "The temperature unit to use. Infer this from the users location.",
+                },
+                "num_days": {
+                    "type": "integer",
+                    "description": "The number of days to forecast",
+                }
+            },
+            "required": ["location", "format", "num_days"]
+        },
     },
 ]
 
-chat = Chat()
+messages = []
+messages.append({"role": "system", "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."})
+messages.append({"role": "user", "content": "What's the weather like today"})
+chat_response = chat_completion_request(
+    messages, functions=functions
+)
+assistant_message = chat_response.json()["choices"][0]["message"]
+messages.append(assistant_message)
+print(assistant_message)
 
-chat.add_chat("user","Tell me the weather of Birgunj today")
+messages.append({"role": "user", "content": "I'm in Kathmandu,Nepal"})
+chat_response = chat_completion_request(
+    messages, functions=functions
+)
+assistant_message = chat_response.json()["choices"][0]["message"]
+messages.append(assistant_message)
+print(assistant_message)
 
-try:
-    chat_response = chat_request(
-        messages=chat.chat_history,
-        function=function,
-    )
-    print(chat_response)
-except Exception as e:
-    print(e)
