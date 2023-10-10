@@ -3,3 +3,4 @@ __pycache__
 practice.py
 api_key_data.py
 Airport/api_key_data.py
+.env
