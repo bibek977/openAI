@@ -8,18 +8,19 @@ with open("Prompt_2.jinja2","r") as f:
     prompt = jinja2.Template(f.read())
 
 labels = [
-    {'label':0,"description":"negative"},
-    {'label':1,"description":"neutral"},
-    {'label':2,"description":"positive"},
+    {'label':"naramro","description":"bad or worst or negative"},
+    {'label':"thikai","description":"normal or neutral"},
+    {'label':"ramro","description":"good or postive"},
 ]
 
 examples = [
-    {'text' : "he is a good man" , 'label':2},
-    {'text' : "he is a terrible man" , 'label':0},
+    {'text' : "he is a good man" , 'label':"ramro"},
+    {'text' : "he is a normal man",'label':"thikai"},
+    {'text' : "he is a terrible man" , 'label':"naramro"},
 ]
 
-# text = "I love playing football"
-text = "I am playing football"
+text = "I love playing football"
+# text = "I am playing football"
 
 result = prompt.render(
     labels = labels,

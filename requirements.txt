@@ -2,4 +2,6 @@ pip install openai
 # pip install -U openai-whisper
 pip install tenacity
 pip install termcolor
-
+pip install python-dotenv
+pip install langchain
+pip install pandas
