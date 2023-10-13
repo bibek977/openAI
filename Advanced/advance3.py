@@ -36,6 +36,7 @@ response = openai.ChatCompletion.create(
 response_data = response['choices'][0]['message']['content']
 print(response_data)
 
+user_input = input("Enter any query: ")
 
 second_query = f"""
 Use the following article below on 2022 baloond'or winner lists to answer the question.
@@ -46,7 +47,7 @@ Article
 {wiki_baloon}
 <>
 '''
-Question: Which female player won the balloond'or in 2022?
+{user_input}
 """
 
 second_response = openai.ChatCompletion.create(
