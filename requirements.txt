@@ -1,5 +1,5 @@
+# chatAi gpt
 pip install openai
-# pip install -U openai-whisper
 pip install tenacity
 pip install termcolor
 pip install python-dotenv
@@ -7,3 +7,14 @@ pip install langchain
 pip install pandas
 pip install tiktoken
 pip install scipy
+pip install requests
+pip install numpy
+
+# Audio Whishper
+pip install -U openai-whisper #needs to install
+pip install pydub
+
+# images dall-E
+pip install torch torchvision torchaudio #installing in process
+pip install git+https://github.com/facebookresearch/segment-anything.git    #needs to install
+pip install opencv-python pycocotools matplotlib onnxruntime onnx   #needs to install
