@@ -89,9 +89,9 @@ assistant_message_lens = []
 
 for i in data:
     messages = i['messages']
-    if any(message['role'] == 'system' for message in messages):
+    if not any(message['role'] == 'system' for message in messages):
         n_missing_system += 1
-    if any(message['role'] == 'user' for message in messages):
+    if not any(message['role'] == 'user' for message in messages):
         n_missing_user += 1
 
     n_messages.append(len(messages))
