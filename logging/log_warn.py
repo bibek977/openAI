@@ -12,8 +12,8 @@ b = 0
 try:
     c = a/b
 except Exception as e:
-    # logging.error("Error occured",exc_info=True)
-    logging.error("Error occured",exc_info=False)
+    logging.error("Error occured",exc_info=True)
+    # logging.error("Error occured",exc_info=False)
     print(e)
     print(type(e))
 

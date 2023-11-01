@@ -9,6 +9,7 @@ pip install tiktoken
 pip install scipy
 pip install requests
 pip install numpy
+pip install wikipedia
 
 # Audio Whishper
 pip install -U openai-whisper #needs to install

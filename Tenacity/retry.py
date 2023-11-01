@@ -10,7 +10,7 @@ def even():
     num = random.randint(0,10)
     if num>1:
         # raise IOError("greater than five")
-        print("greater than five")
+        print("greater than one")
         print(num)
         raise Exception
     else:
@@ -19,5 +19,7 @@ def even():
 
 # even()
 
-if __name__ == "main":
+if __name__ == "__main__":
+    print("name = main active")
     even()
+    
